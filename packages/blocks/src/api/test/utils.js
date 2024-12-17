@@ -12,6 +12,7 @@ import {
 	isUnmodifiedDefaultBlock,
 	getAccessibleBlockLabel,
 	getBlockLabel,
+	isBlockRegistered,
 	__experimentalSanitizeBlockAttributes,
 	getBlockAttributesNamesByRole,
 	isContentBlock,
@@ -213,6 +214,22 @@ describe( 'getAccessibleBlockLabel', () => {
 	} );
 } );
 
+describe( 'isBlockRegistered', () => {
+	it( 'returns true if the block is registered', () => {
+		registerBlockType( 'core/test-block', {} );
+		expect( isBlockRegistered( 'core/test-block' ) ).toBe( true );
+		getBlockTypes().forEach( ( block ) => {
+			unregisterBlockType( block.name );
+		} );
+	} );
+
+	it( 'returns false if the block is not registered', () => {
+		expect( isBlockRegistered( 'core/not-registered-test-block' ) ).toBe(
+			false
+		);
+	} );
+} );
+
 describe( 'sanitizeBlockAttributes', () => {
 	afterEach( () => {
 		getBlockTypes().forEach( ( block ) => {
@@ -243,15 +260,18 @@ describe( 'sanitizeBlockAttributes', () => {
 		} );
 	} );
 
-	it( 'throws error if the block is not registered', () => {
-		expect( () => {
-			__experimentalSanitizeBlockAttributes(
-				'core/not-registered-test-block',
-				{}
-			);
-		} ).toThrowErrorMatchingInlineSnapshot(
-			`"Block type 'core/not-registered-test-block' is not registered."`
+	it( 'logs warning and returns empty object if the block is not registered', () => {
+		const consoleSpy = jest.spyOn( console, 'warn' );
+		const sanitizedAttributes = __experimentalSanitizeBlockAttributes(
+			'core/not-registered-test-block',
+			{}
 		);
+
+		expect( sanitizedAttributes ).toBe( {} );
+		expect( consoleSpy ).toHaveBeenCalledWith(
+			"Block type 'core/not-registered-test-block' is not registered."
+		);
+		consoleSpy.mockRestore();
 	} );
 
 	it( 'handles undefined values and default values', () => {
