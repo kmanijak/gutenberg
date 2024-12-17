@@ -216,7 +216,7 @@ describe( 'getAccessibleBlockLabel', () => {
 
 describe( 'isBlockRegistered', () => {
 	it( 'returns true if the block is registered', () => {
-		registerBlockType( 'core/test-block', {} );
+		registerBlockType( 'core/test-block', { title: 'Test block' } );
 		expect( isBlockRegistered( 'core/test-block' ) ).toBe( true );
 		getBlockTypes().forEach( ( block ) => {
 			unregisterBlockType( block.name );
@@ -260,18 +260,15 @@ describe( 'sanitizeBlockAttributes', () => {
 		} );
 	} );
 
-	it( 'logs warning and returns empty object if the block is not registered', () => {
-		const consoleSpy = jest.spyOn( console, 'warn' );
-		const sanitizedAttributes = __experimentalSanitizeBlockAttributes(
-			'core/not-registered-test-block',
-			{}
+	it( 'throws error if the block is not registered', () => {
+		expect( () => {
+			__experimentalSanitizeBlockAttributes(
+				'core/not-registered-test-block',
+				{}
+			);
+		} ).toThrowErrorMatchingInlineSnapshot(
+			`"Block type 'core/not-registered-test-block' is not registered."`
 		);
-
-		expect( sanitizedAttributes ).toBe( {} );
-		expect( consoleSpy ).toHaveBeenCalledWith(
-			"Block type 'core/not-registered-test-block' is not registered."
-		);
-		consoleSpy.mockRestore();
 	} );
 
 	it( 'handles undefined values and default values', () => {
