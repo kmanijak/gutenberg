@@ -218,9 +218,7 @@ describe( 'isBlockRegistered', () => {
 	it( 'returns true if the block is registered', () => {
 		registerBlockType( 'core/test-block', { title: 'Test block' } );
 		expect( isBlockRegistered( 'core/test-block' ) ).toBe( true );
-		getBlockTypes().forEach( ( block ) => {
-			unregisterBlockType( block.name );
-		} );
+		unregisterBlockType( 'core/test-block' );
 	} );
 
 	it( 'returns false if the block is not registered', () => {
