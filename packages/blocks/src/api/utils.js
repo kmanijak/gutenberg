@@ -268,6 +268,17 @@ export function getDefault( attributeSchema ) {
 }
 
 /**
+ * Check if a block is registered.
+ *
+ * @param {string} name The block's name.
+ *
+ * @return {boolean} Whether the block is registered.
+ */
+export function isBlockRegistered( name ) {
+	return getBlockType( name ) !== undefined;
+}
+
+/**
  * Ensure attributes contains only values defined by block type, and merge
  * default values for missing attributes.
  *
@@ -281,7 +292,7 @@ export function __experimentalSanitizeBlockAttributes( name, attributes ) {
 
 	if ( undefined === blockType ) {
 		warning( `Block type '${ name }' is not registered.` );
-		return false;
+		return {};
 	}
 
 	return Object.entries( blockType.attributes ).reduce(
