@@ -13,6 +13,7 @@ import { __, sprintf } from '@wordpress/i18n';
 import { __unstableStripHTML as stripHTML } from '@wordpress/dom';
 import { RichTextData } from '@wordpress/rich-text';
 import deprecated from '@wordpress/deprecated';
+import warning from '@wordpress/warning';
 
 /**
  * Internal dependencies
@@ -279,7 +280,8 @@ export function __experimentalSanitizeBlockAttributes( name, attributes ) {
 	const blockType = getBlockType( name );
 
 	if ( undefined === blockType ) {
-		throw new Error( `Block type '${ name }' is not registered.` );
+		warning( `Block type '${ name }' is not registered.` );
+		return false;
 	}
 
 	return Object.entries( blockType.attributes ).reduce(
