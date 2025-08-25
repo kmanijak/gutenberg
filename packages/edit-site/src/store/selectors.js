@@ -154,7 +154,7 @@ export function getEditedPostType( state ) {
  * @deprecated
  * @param {Object} state Global application state.
  *
- * @return {?string} Post ID.
+ * @return {?(string|number)} Template slug or post ID.
  */
 export function getEditedPostId( state ) {
 	deprecated( "select( 'core/edit-site' ).getEditedPostId", {

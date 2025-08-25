@@ -62,7 +62,7 @@ _Parameters_
 
 _Returns_
 
--   `?string`: Post ID.
+-   `?(string|number)`: Template slug or post ID.
 
 ### getEditedPostType
 
